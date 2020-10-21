@@ -1,16 +1,31 @@
 PODS:
   - Alamofire (5.2.2)
+  - Sentry (6.0.3):
+    - Sentry/Core (= 6.0.3)
+  - Sentry/Core (6.0.3)
 
 DEPENDENCIES:
   - Alamofire (~> 5.2)
+  - Sentry (from `https://github.com/getsentry/sentry-cocoa.git`, tag `6.0.3`)
 
 SPEC REPOS:
   trunk:
     - Alamofire
 
+EXTERNAL SOURCES:
+  Sentry:
+    :git: https://github.com/getsentry/sentry-cocoa.git
+    :tag: 6.0.3
+
+CHECKOUT OPTIONS:
+  Sentry:
+    :git: https://github.com/getsentry/sentry-cocoa.git
+    :tag: 6.0.3
+
 SPEC CHECKSUMS:
   Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
+  Sentry: 286e33636e0be9b559e2ebe2eae63ec53f83816e
 
-PODFILE CHECKSUM: 0cf49b21eebfb6c22ce42e45fdc337ab1f4e2e87
+PODFILE CHECKSUM: 9733f0863dc58f5964bf099077e316a807c6e5f0
 
 COCOAPODS: 1.9.3

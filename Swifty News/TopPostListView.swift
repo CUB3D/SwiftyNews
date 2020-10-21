@@ -7,10 +7,37 @@
 
 import Foundation
 import SwiftUI
+import Combine
+
+class PostListViewModel: ObservableObject {
+    @Published var posts: Array<HNItem> = []
+
+    var api: HNApi;
+    var tokens: Set<AnyCancellable> = []
+
+    init(api: HNApi) {
+        self.api = api;
+    }
+
+    func getPosts() {
+        self.api.getTopStoriesAsync().sink(receiveCompletion: { completion in
+            switch completion {
+            case .finished:
+                break;
+            case .failure(let error):
+                print("Error:", error)
+            }
+        }, receiveValue: { items in
+            self.posts = items.filter { (item: HNItem) -> Bool in
+                item.type == "story"
+            }
+        }).store(in: &tokens)
+    }
+}
 
 struct TopPostListView: View {
-    @ObservedObject var topStories = HNApi()
-    
+    @ObservedObject var viewModel = PostListViewModel(api: HNApi())
+
     @State private var selection: String? = nil
     
     private var type: String
@@ -22,21 +49,21 @@ struct TopPostListView: View {
     
     var body: some View {
         NavigationView {
-            List(topStories.items.filter({ (item: HNItem) -> Bool in
-                item.type == "story"
-            })) { i in
+            List(viewModel.posts) { i in
                 NavigationLink(
                     destination: SingleItemDetailView(item: i),
                     tag: String(i.id),
                     selection: $selection
                 ) {
-                    VStack {
+                    VStack(alignment: .leading) {
                         Text(i.title!).padding()
                         Text("Posted at \(formatDate(i: i))")
+                            .padding()
+                            .foregroundColor(Color.gray)
                     }
                 }
             }.onAppear {
-                topStories.getTopStories()
+                viewModel.getPosts()
             }
             .navigationBarTitle("Top Stories")
         }
