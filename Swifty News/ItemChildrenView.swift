@@ -28,10 +28,12 @@ class ViewModel: ObservableObject {
                 print("Error:", error)
             }
         }, receiveValue: { items in
-            self.children = items.filter { (item: HNItem) -> Bool in
+            print("Got $\(items.count) children")
+            self.children = items;
+            /**self.children = items.filter { (item: HNItem) -> Bool in
                 //TODO: is this check even needed anymore
                 item.type == "comment"
-            }
+            }**/
         }).store(in: &tokens)
     }
 }
@@ -46,12 +48,13 @@ struct ItemChildrenView: View {
     
     var body: some View {
         VStack {
+            Text("Hello")
             Text(self.item.text?.stringByDecodingHTMLEntities ?? "").padding()
             List(viewModel.children) { comment in
                 ItemChildrenView(item: comment)
-            }.onAppear {
-                viewModel.getChildren(item: self.item)
             }
+        }.onAppear {
+            viewModel.getChildren(item: self.item)
         }
     }
 }
